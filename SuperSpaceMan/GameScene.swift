@@ -18,6 +18,8 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
     let coreMotionManager = CMMotionManager() //A CMMotionManager object is the object used to get access to the motion services provided by iOS. These services include access to the accelerometer, magnetometer, rotation rate, and other device motion sensors.
     let CollisionCategoryPlayer : UInt32 = 0x1 << 1
     let CollisionCategoryPowerUpOrbs : UInt32 = 0x1 << 2
+    let CollisionCategoryBlackHoles : UInt32 = 0x1 << 3
+    
     let foregroundNode = SKSpriteNode()
     
     
@@ -53,45 +55,57 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
         playerNode.physicsBody?.linearDamping = 1.0 //is used to reduce a physics body’s linear velocity to simulate fluid or air friction
         playerNode.physicsBody?.allowsRotation = false //to make it keep blasting through the orbs without spinning off
         playerNode.physicsBody?.categoryBitMask = CollisionCategoryPlayer //Defines the collision categories to which a physics body belongs.
-        playerNode.physicsBody?.contactTestBitMask = CollisionCategoryPowerUpOrbs //Determines which categories this physics body makes contact with.
+        playerNode.physicsBody?.contactTestBitMask = CollisionCategoryPowerUpOrbs | CollisionCategoryBlackHoles //Determines which categories this physics body makes contact with.
         playerNode.physicsBody?.collisionBitMask = 0 //tells SpriteKit not to handle collisions for me.
         foregroundNode.addChild(playerNode) //did not set the anchor point of the playerNode. That’s because the default anchor point of all SKNodes is (0.5, 0.5), which is the center of the node.
+        addOrbToForeground()
+        addBlackHolesToForeground()
+    }
+    
+    func addOrbToForeground() {
         
         var orbNodePosition = CGPoint(x: playerNode.position.x, y: playerNode.position.y + 100)
+        var orbXShift: CGFloat = -1.0
         
-        for _ in 0...19 {
+        for _ in 1...50 {
             let orbNode = SKSpriteNode(imageNamed: "PowerUp")
-            
-            orbNodePosition.y += 140
-            orbNode.position =  orbNodePosition
-            orbNode.physicsBody = SKPhysicsBody(circleOfRadius: orbNode.size.width / 2)
-            orbNode.physicsBody?.isDynamic = false
-            
-            orbNode.physicsBody?.categoryBitMask = CollisionCategoryPowerUpOrbs
-            orbNode.physicsBody?.collisionBitMask = 0
-            orbNode.name = "POWER_UP_ORB"
-            
-            foregroundNode.addChild(orbNode)
+            if orbNodePosition.x - (orbNode.size.width * 2) <= 0 { //after go to the left, before size of orbnode(2x) it will going increase to the right
+                orbXShift = 1.0
+            }
+        
+        
+        if orbNodePosition.x + orbNode.size.width >= size.width { ////after go to the right, before size of orbnode(2x) it will going increase to the left
+            orbXShift = -1.0
         }
         
-        orbNodePosition = CGPoint(x: playerNode.position.x + 50, y: orbNodePosition.y)
-        
-        for _ in 0...19 {
-            let orbNode = SKSpriteNode(imageNamed: "PowerUp")
+        orbNodePosition.x += 40.0 * orbXShift
+        orbNodePosition.y += 120
+        orbNode.position = orbNodePosition
+        orbNode.physicsBody = SKPhysicsBody(circleOfRadius: orbNode.size.width / 2)
+        orbNode.physicsBody?.isDynamic = false
             
-            orbNodePosition.y += 140
-            orbNode.position = orbNodePosition
-            orbNode.physicsBody = SKPhysicsBody(circleOfRadius: orbNode.size.width / 2)
-            orbNode.physicsBody?.isDynamic = false
+        orbNode.physicsBody?.categoryBitMask = CollisionCategoryPowerUpOrbs
+        orbNode.physicsBody?.collisionBitMask = 0
+        orbNode.name = "POWER_UP_ORB"
             
-            orbNode.physicsBody?.categoryBitMask = CollisionCategoryPowerUpOrbs
-            orbNode.physicsBody?.collisionBitMask = 0
-            orbNode.name = "POWER_UP_ORB"
-            
-            foregroundNode.addChild(orbNode)
+        foregroundNode.addChild(orbNode)
         }
-        
     }
+    
+    
+    func addBlackHolesToForeground() {
+        let blackHoleNode = SKSpriteNode(imageNamed: "BlackHole0")
+        blackHoleNode.position = CGPoint(x: size.width - 80.0, y: 600.0)
+        blackHoleNode.physicsBody = SKPhysicsBody(circleOfRadius: blackHoleNode.size.width / 2)
+        blackHoleNode.physicsBody?.isDynamic = false
+        blackHoleNode.name = "BLACK_HOLE"
+        
+        blackHoleNode.physicsBody?.categoryBitMask = CollisionCategoryBlackHoles
+        blackHoleNode.physicsBody?.collisionBitMask = 0
+        
+        foregroundNode.addChild(blackHoleNode)
+    }
+    
     
     override func didSimulatePhysics() {
         if let accelerometerData = coreMotionManager.accelerometerData {
@@ -105,9 +119,11 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
         }
     }
     
+    
     deinit {
         coreMotionManager.stopAccelerometerUpdates()
     }
+    
     
     override func update(_ currentTime: TimeInterval) {
         if playerNode.position.y >= 180.0 {
@@ -115,8 +131,8 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
             
             foregroundNode.position = CGPoint(x: foregroundNode.position.x, y: -(playerNode.position.y - 180.0) )
         }
-        
     }
+    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if !playerNode.physicsBody!.isDynamic { //turning the player’s dynamic volume back on, if it was off, so the player will start reacting to gravity again
@@ -130,18 +146,33 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
             playerNode.physicsBody!.applyImpulse(CGVector(dx: 0.0, dy: 40.0)) //This line applies an impulse to the playerNode’s physics body every time you tap the screen.
             impulseCount -= 1
         }
-        
     }
+    
     
     
 }
 
+
+
 extension GameScene: SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {
-        let nodeB = contact.bodyB.node! //represent second body in the contact
-        if nodeB.name == "POWER_UP_ORB" { //if there is a contact then the nodeB is true
-            impulseCount += 1 //the contact is going to also increment the impuleCount variable, giving the player additional impulses
-            nodeB.removeFromParent() //then nodeB will be disappear
+        //let nodeB = contact.bodyB.node! //represent second body in the contact. "!" force unwrapped
+        
+//        let nodeB
+//        if contact.bodyB.node != nil {
+//            nodeB = contact.bodyB.node!
+//        }
+        
+        if let nodeB = contact.bodyB.node { //optional blinding, if nodeB is nil it will not execute
+            if nodeB.name == "POWER_UP_ORB" { //if there is a contact then the nodeB is true
+                impulseCount += 1 //the contact is going to also increment the impuleCount variable, giving the player additional impulses
+                nodeB.removeFromParent() //then nodeB will be disappear
+            } else if nodeB.name == "BLACK_HOLE" {
+                playerNode.physicsBody?.contactTestBitMask = 0
+                impulseCount = 0
+            }
         }
+        
+        
     }
 }
