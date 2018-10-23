@@ -94,16 +94,43 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
     
     
     func addBlackHolesToForeground() {
-        let blackHoleNode = SKSpriteNode(imageNamed: "BlackHole0")
-        blackHoleNode.position = CGPoint(x: size.width - 80.0, y: 600.0)
-        blackHoleNode.physicsBody = SKPhysicsBody(circleOfRadius: blackHoleNode.size.width / 2)
-        blackHoleNode.physicsBody?.isDynamic = false
-        blackHoleNode.name = "BLACK_HOLE"
+        let textureAtlas = SKTextureAtlas(named: "sprites.atlas")
         
-        blackHoleNode.physicsBody?.categoryBitMask = CollisionCategoryBlackHoles
-        blackHoleNode.physicsBody?.collisionBitMask = 0
+        let frame0 = textureAtlas.textureNamed("BlackHole0")
+        let frame1 = textureAtlas.textureNamed("BlackHole1")
+        let frame2 = textureAtlas.textureNamed("BlackHole2")
+        let frame3 = textureAtlas.textureNamed("BlackHole3")
+        let frame4 = textureAtlas.textureNamed("BlackHole4")
         
-        foregroundNode.addChild(blackHoleNode)
+        let blackHoleTextures = [frame0, frame1, frame2, frame3, frame4]
+        
+        let animateAction = SKAction.animate(with: blackHoleTextures, timePerFrame: 0.2)
+        let rotateAction = SKAction.repeatForever(animateAction)
+        
+        
+        let moveLeftAction = SKAction.moveTo(x: 0.0, duration: 2.0) //move the blackhole into 0 X axis, it means move to the left
+        let moveRightAction = SKAction.moveTo(x: size.width, duration: 2.0) //move the blackhole into width of the size(layer) in X axis, it means move to the right
+        let actionSequence = SKAction.sequence([moveLeftAction, moveRightAction]) //move to the left after that move to the right
+        let moveAction = SKAction.repeatForever(actionSequence) //repeat move sequence
+        
+        for i in 1...10 {
+            let blackHoleNode = SKSpriteNode(imageNamed: "BlackHole0")
+            
+            blackHoleNode.position = CGPoint(x: size.width - 80.0, y: 600.0 * CGFloat(i))
+            blackHoleNode.physicsBody = SKPhysicsBody(circleOfRadius: blackHoleNode.size.width / 2)
+            blackHoleNode.physicsBody?.isDynamic = false
+            
+            blackHoleNode.physicsBody?.categoryBitMask = CollisionCategoryBlackHoles
+            blackHoleNode.physicsBody?.collisionBitMask = 0
+            
+            blackHoleNode.name = "BLACK_HOLE"
+            
+            blackHoleNode.run(moveAction)
+            blackHoleNode.run(rotateAction)
+            foregroundNode.addChild(blackHoleNode)
+        }
+        
+        
     }
     
     
