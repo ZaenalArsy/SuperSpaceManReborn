@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1829BFA02187F2950073BF73 /* EngineExhaust.sks in Resources */ = {isa = PBXBuildFile; fileRef = 1829BF9F2187F2950073BF73 /* EngineExhaust.sks */; };
+		1829BFA22187F2F10073BF73 /* MySparkParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 1829BFA12187F2F10073BF73 /* MySparkParticle.sks */; };
 		1885CEBF2175888F0009A7D0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1885CEBE2175888F0009A7D0 /* AppDelegate.swift */; };
 		1885CEC52175888F0009A7D0 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1885CEC42175888F0009A7D0 /* GameScene.swift */; };
 		1885CEC72175888F0009A7D0 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1885CEC62175888F0009A7D0 /* GameViewController.swift */; };
@@ -18,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1829BF9F2187F2950073BF73 /* EngineExhaust.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = EngineExhaust.sks; sourceTree = "<group>"; };
+		1829BFA12187F2F10073BF73 /* MySparkParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MySparkParticle.sks; sourceTree = "<group>"; };
 		1885CEBB2175888F0009A7D0 /* SuperSpaceMan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SuperSpaceMan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1885CEBE2175888F0009A7D0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1885CEC42175888F0009A7D0 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -66,9 +70,11 @@
 			children = (
 				1885CEBE2175888F0009A7D0 /* AppDelegate.swift */,
 				1885CEC42175888F0009A7D0 /* GameScene.swift */,
+				1829BF9F2187F2950073BF73 /* EngineExhaust.sks */,
 				1885CEC62175888F0009A7D0 /* GameViewController.swift */,
 				1885CEC82175888F0009A7D0 /* Main.storyboard */,
 				1885CECB217588900009A7D0 /* Assets.xcassets */,
+				1829BFA12187F2F10073BF73 /* MySparkParticle.sks */,
 				1885CECD217588900009A7D0 /* LaunchScreen.storyboard */,
 				1885CED0217588900009A7D0 /* Info.plist */,
 				8FCBF1D12176230F00974870 /* sprites.atlas */,
@@ -145,8 +151,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1829BFA02187F2950073BF73 /* EngineExhaust.sks in Resources */,
 				1885CECA2175888F0009A7D0 /* Main.storyboard in Resources */,
 				1885CECC217588900009A7D0 /* Assets.xcassets in Resources */,
+				1829BFA22187F2F10073BF73 /* MySparkParticle.sks in Resources */,
 				8FCBF1D22176230F00974870 /* sprites.atlas in Resources */,
 				1885CECF217588900009A7D0 /* LaunchScreen.storyboard in Resources */,
 			);

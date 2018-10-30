@@ -23,7 +23,7 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
     let CollisionCategoryBlackHoles : UInt32 = 0x1 << 3
     
     let foregroundNode = SKSpriteNode()
-    
+    var engineExhaust : SKEmitterNode?
     
     
     required init?(coder aDecoder: NSCoder) { //This method is required because instantiating a UIViewController from a UIStoryBoard calls it.
@@ -72,6 +72,18 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
         foregroundNode.addChild(playerNode) //did not set the anchor point of the playerNode. That’s because the default anchor point of all SKNodes is (0.5, 0.5), which is the center of the node.
         addOrbToForeground()
         addBlackHolesToForeground()
+        
+//        let pathToEmitter =  Bundle.main.path(forResource: "MySparkParticle", ofType: "sks")
+//        let emitter = NSKeyedUnarchiver.unarchiveObject(withFile: pathToEmitter!) as? SKEmitterNode
+//        addChild(emitter!)
+        
+        let engineExhaustPath = Bundle.main.path(forResource: "EngineExhaust", ofType: "sks")
+        engineExhaust = NSKeyedUnarchiver.unarchiveObject(withFile: engineExhaustPath!) as? SKEmitterNode
+        engineExhaust?.position = CGPoint(x: 0.0, y: -(playerNode.size.height / 2))
+        
+        playerNode.addChild(engineExhaust!)
+        engineExhaust?.isHidden = true
+        
     }
     
     func addOrbToForeground() {
@@ -141,8 +153,6 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
             blackHoleNode.run(rotateAction)
             foregroundNode.addChild(blackHoleNode)
         }
-        
-        
     }
     
     
@@ -159,10 +169,25 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
     }
     
     
-    deinit {
-        coreMotionManager.stopAccelerometerUpdates()
-    }
+   
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if !playerNode.physicsBody!.isDynamic { //turning the player’s dynamic volume back on, if it was off, so the player will start reacting to gravity again
+            playerNode.physicsBody?.isDynamic = true //The purpose of this code is to put the game in an initial start state with the player stationary until i tap the screen to start. When the screen is tapped the first time, the game begins.
+            
+            coreMotionManager.accelerometerUpdateInterval = 0.3 //the interval, in seconds, that the accelerometer will use to update the app with the current acceleration. This value is set to 3/10ths of a second, which provides a pretty smooth update rate.
+            coreMotionManager.startAccelerometerUpdates()
+        }
+        
+        if impulseCount > 0 { //the impulseCount property to give the user a limited number of impulses that can be used
+            playerNode.physicsBody!.applyImpulse(CGVector(dx: 0.0, dy: 40.0)) //This line applies an impulse to the playerNode’s physics body every time you tap the screen.
+            impulseCount -= 1
+            
+            engineExhaust?.isHidden = false
+
+            Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(GameScene.hideEngineExaust(_:)), userInfo: nil, repeats: false)
+        }
+    }
     
     override func update(_ currentTime: TimeInterval) {
         if playerNode.position.y >= 180.0 {
@@ -177,21 +202,16 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
         }
     }
     
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if !playerNode.physicsBody!.isDynamic { //turning the player’s dynamic volume back on, if it was off, so the player will start reacting to gravity again
-            playerNode.physicsBody?.isDynamic = true //The purpose of this code is to put the game in an initial start state with the player stationary until i tap the screen to start. When the screen is tapped the first time, the game begins.
-            
-            coreMotionManager.accelerometerUpdateInterval = 0.3 //the interval, in seconds, that the accelerometer will use to update the app with the current acceleration. This value is set to 3/10ths of a second, which provides a pretty smooth update rate.
-            coreMotionManager.startAccelerometerUpdates()
-        }
+    @objc func hideEngineExaust(_ timer:Timer!) {
         
-        if impulseCount > 0 { //the impulseCount property to give the user a limited number of impulses that can be used
-            playerNode.physicsBody!.applyImpulse(CGVector(dx: 0.0, dy: 40.0)) //This line applies an impulse to the playerNode’s physics body every time you tap the screen.
-            impulseCount -= 1
+        if !engineExhaust!.isHidden {
+            engineExhaust?.isHidden = true
         }
     }
     
+    deinit {
+        coreMotionManager.stopAccelerometerUpdates()
+    }
     
 }
 
