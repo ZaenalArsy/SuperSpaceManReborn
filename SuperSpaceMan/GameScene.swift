@@ -13,6 +13,8 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
     
     
     let backgroundNode = SKSpriteNode(imageNamed: "Background") //SKSpriteNode is descendent of an SKNode, which is the primary building block of almost all SpriteKit content. Both of which are being initialized to their respective images in the Image.xcassets folder.
+    let backgroundStarsNode = SKSpriteNode(imageNamed: "Stars")
+    let backgroundPlanetNode = SKSpriteNode(imageNamed: "PlanetStart")
     let playerNode = SKSpriteNode(imageNamed: "Player") //SKNode itself does not draw any visual elements, but all visual elements in all SpriteKit-based applications are drawn using SKNode subclasses.
     var impulseCount = 4
     let coreMotionManager = CMMotionManager() //A CMMotionManager object is the object used to get access to the motion services provided by iOS. These services include access to the accelerometer, magnetometer, rotation rate, and other device motion sensors.
@@ -45,13 +47,23 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
         backgroundNode.position = CGPoint(x: size.width / 2.0, y: 0.0)
         addChild(backgroundNode)
         
+        backgroundStarsNode.size.width = frame.size.width
+        backgroundStarsNode.anchorPoint = CGPoint(x: 0.5, y: 0.0)
+        backgroundStarsNode.position = CGPoint(x: 160.0, y: 0.0)
+        addChild(backgroundStarsNode)
+        
+        backgroundPlanetNode.size.width = frame.size.width
+        backgroundPlanetNode.anchorPoint = CGPoint(x: 0.5, y: 0.0)
+        backgroundPlanetNode.position = CGPoint(x: size.width / 2.0, y: 0.0)
+        addChild(backgroundPlanetNode)
+        
         addChild(foregroundNode)
         
         //add the player
         playerNode.physicsBody = SKPhysicsBody(circleOfRadius: playerNode.size.width / 2) //the width of the playerNode divided by 2. We’re using this value because we want to create a circle around the playerNode starting from its center with a radius of half the width of the node. This will result in a circle that surrounds the playerNode completely
         playerNode.physicsBody?.isDynamic = false //turns the playerNode into a physics body with a dynamic volume. It will now respond to gravity and other physical bodies in the scene
         
-        playerNode.position = CGPoint(x: size.width / 2.0, y: 180.0)
+        playerNode.position = CGPoint(x: size.width / 2.0, y: 220.0)
         playerNode.physicsBody?.linearDamping = 1.0 //is used to reduce a physics body’s linear velocity to simulate fluid or air friction
         playerNode.physicsBody?.allowsRotation = false //to make it keep blasting through the orbs without spinning off
         playerNode.physicsBody?.categoryBitMask = CollisionCategoryPlayer //Defines the collision categories to which a physics body belongs.
@@ -154,7 +166,12 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
     
     override func update(_ currentTime: TimeInterval) {
         if playerNode.position.y >= 180.0 {
+            
             backgroundNode.position = CGPoint(x: backgroundNode.position.x, y: -((playerNode.position.y - 180.0)/8) )
+            
+            backgroundStarsNode.position = CGPoint(x: backgroundStarsNode.position.x, y: -((playerNode.position.y - 180.0)/6))
+            
+            backgroundPlanetNode.position = CGPoint(x: backgroundPlanetNode.position.x, y: -(playerNode.position.y - 180.0))
             
             foregroundNode.position = CGPoint(x: foregroundNode.position.x, y: -(playerNode.position.y - 180.0) )
         }
@@ -174,7 +191,6 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
             impulseCount -= 1
         }
     }
-    
     
     
 }
@@ -197,6 +213,9 @@ extension GameScene: SKPhysicsContactDelegate {
             } else if nodeB.name == "BLACK_HOLE" {
                 playerNode.physicsBody?.contactTestBitMask = 0
                 impulseCount = 0
+                
+                let colorizeAction = SKAction.colorize(with: UIColor.red, colorBlendFactor: 1.0, duration: 1)
+                playerNode.run(colorizeAction)
             }
         }
         

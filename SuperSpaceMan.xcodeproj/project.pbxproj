@@ -13,6 +13,7 @@
 		1885CECA2175888F0009A7D0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1885CEC82175888F0009A7D0 /* Main.storyboard */; };
 		1885CECC217588900009A7D0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1885CECB217588900009A7D0 /* Assets.xcassets */; };
 		1885CECF217588900009A7D0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1885CECD217588900009A7D0 /* LaunchScreen.storyboard */; };
+		8F025B1E2187341800882187 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F025B18218733C100882187 /* AssetsLibrary.framework */; };
 		8FCBF1D22176230F00974870 /* sprites.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 8FCBF1D12176230F00974870 /* sprites.atlas */; };
 /* End PBXBuildFile section */
 
@@ -25,6 +26,9 @@
 		1885CECB217588900009A7D0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1885CECE217588900009A7D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1885CED0217588900009A7D0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8F025B142187307400882187 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		8F025B162187307A00882187 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		8F025B18218733C100882187 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		8FCBF1D12176230F00974870 /* sprites.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = sprites.atlas; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -33,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F025B1E2187341800882187 /* AssetsLibrary.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,6 +49,7 @@
 			children = (
 				1885CEBD2175888F0009A7D0 /* SuperSpaceMan */,
 				1885CEBC2175888F0009A7D0 /* Products */,
+				8F025B132187307400882187 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -68,6 +74,16 @@
 				8FCBF1D12176230F00974870 /* sprites.atlas */,
 			);
 			path = SuperSpaceMan;
+			sourceTree = "<group>";
+		};
+		8F025B132187307400882187 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8F025B18218733C100882187 /* AssetsLibrary.framework */,
+				8F025B162187307A00882187 /* HealthKit.framework */,
+				8F025B142187307400882187 /* UIKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
