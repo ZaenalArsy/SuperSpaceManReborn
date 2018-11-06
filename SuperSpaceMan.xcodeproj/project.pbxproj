@@ -15,6 +15,10 @@
 		1885CECA2175888F0009A7D0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1885CEC82175888F0009A7D0 /* Main.storyboard */; };
 		1885CECC217588900009A7D0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1885CECB217588900009A7D0 /* Assets.xcassets */; };
 		1885CECF217588900009A7D0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1885CECD217588900009A7D0 /* LaunchScreen.storyboard */; };
+		18D4A4E72191318C0059AB9A /* orb_pop.wav in Resources */ = {isa = PBXBuildFile; fileRef = 18D4A4E62191318B0059AB9A /* orb_pop.wav */; };
+		18D4A4E92191329F0059AB9A /* tap_pop.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 18D4A4E82191329F0059AB9A /* tap_pop.mp3 */; };
+		18D4A4EB219132A60059AB9A /* died_pop.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 18D4A4EA219132A60059AB9A /* died_pop.mp3 */; };
+		18D4A4ED21913DEA0059AB9A /* MenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D4A4EC21913DEA0059AB9A /* MenuScene.swift */; };
 		8F025B1E2187341800882187 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F025B18218733C100882187 /* AssetsLibrary.framework */; };
 		8FCBF1D22176230F00974870 /* sprites.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 8FCBF1D12176230F00974870 /* sprites.atlas */; };
 /* End PBXBuildFile section */
@@ -30,6 +34,10 @@
 		1885CECB217588900009A7D0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1885CECE217588900009A7D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1885CED0217588900009A7D0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		18D4A4E62191318B0059AB9A /* orb_pop.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = orb_pop.wav; sourceTree = "<group>"; };
+		18D4A4E82191329F0059AB9A /* tap_pop.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = tap_pop.mp3; sourceTree = "<group>"; };
+		18D4A4EA219132A60059AB9A /* died_pop.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = died_pop.mp3; sourceTree = "<group>"; };
+		18D4A4EC21913DEA0059AB9A /* MenuScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuScene.swift; sourceTree = "<group>"; };
 		8F025B142187307400882187 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		8F025B162187307A00882187 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		8F025B18218733C100882187 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
@@ -77,7 +85,11 @@
 				1829BFA12187F2F10073BF73 /* MySparkParticle.sks */,
 				1885CECD217588900009A7D0 /* LaunchScreen.storyboard */,
 				1885CED0217588900009A7D0 /* Info.plist */,
+				18D4A4E62191318B0059AB9A /* orb_pop.wav */,
+				18D4A4E82191329F0059AB9A /* tap_pop.mp3 */,
+				18D4A4EA219132A60059AB9A /* died_pop.mp3 */,
 				8FCBF1D12176230F00974870 /* sprites.atlas */,
+				18D4A4EC21913DEA0059AB9A /* MenuScene.swift */,
 			);
 			path = SuperSpaceMan;
 			sourceTree = "<group>";
@@ -155,8 +167,11 @@
 				1885CECA2175888F0009A7D0 /* Main.storyboard in Resources */,
 				1885CECC217588900009A7D0 /* Assets.xcassets in Resources */,
 				1829BFA22187F2F10073BF73 /* MySparkParticle.sks in Resources */,
+				18D4A4E92191329F0059AB9A /* tap_pop.mp3 in Resources */,
+				18D4A4EB219132A60059AB9A /* died_pop.mp3 in Resources */,
 				8FCBF1D22176230F00974870 /* sprites.atlas in Resources */,
 				1885CECF217588900009A7D0 /* LaunchScreen.storyboard in Resources */,
+				18D4A4E72191318C0059AB9A /* orb_pop.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -168,6 +183,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1885CEC52175888F0009A7D0 /* GameScene.swift in Sources */,
+				18D4A4ED21913DEA0059AB9A /* MenuScene.swift in Sources */,
 				1885CEC72175888F0009A7D0 /* GameViewController.swift in Sources */,
 				1885CEBF2175888F0009A7D0 /* AppDelegate.swift in Sources */,
 			);

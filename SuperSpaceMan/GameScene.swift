@@ -25,6 +25,16 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
     let foregroundNode = SKSpriteNode()
     var engineExhaust : SKEmitterNode?
     
+    var score = 0
+    let scoreTextNode = SKLabelNode(fontNamed: "Copperplate")
+    let impulseTextNode = SKLabelNode(fontNamed: "Copperplate")
+    
+    let orbPopAction = SKAction.playSoundFileNamed("orb_pop.wav", waitForCompletion: false)
+    let tapPopAction = SKAction.playSoundFileNamed("tap_pop.mp3", waitForCompletion: false)
+    let diedPopAction = SKAction.playSoundFileNamed("died_pop.mp3", waitForCompletion: false)
+
+    let startGameTextNode = SKLabelNode(fontNamed: "Copperplate")
+    
     
     required init?(coder aDecoder: NSCoder) { //This method is required because instantiating a UIViewController from a UIStoryBoard calls it.
         super.init(coder: aDecoder)
@@ -35,11 +45,13 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
         super.init(size: size)
         //backgroundColor = SKColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0) //REMOVE
         
+        
         physicsWorld.contactDelegate = self
         
         physicsWorld.gravity = CGVector(dx: 0.0, dy: -5.0); //dy to slow and fast the things down (-0.1) and also can up with (0.1).
         
         isUserInteractionEnabled = true
+        
         
         //adding the background
         backgroundNode.size.width = frame.size.width //sets the width of the backgroundNode to the width of the view’s frame.
@@ -58,6 +70,7 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
         addChild(backgroundPlanetNode)
         
         addChild(foregroundNode)
+        
         
         //add the player
         playerNode.physicsBody = SKPhysicsBody(circleOfRadius: playerNode.size.width / 2) //the width of the playerNode divided by 2. We’re using this value because we want to create a circle around the playerNode starting from its center with a radius of half the width of the node. This will result in a circle that surrounds the playerNode completely
@@ -83,6 +96,32 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
         
         playerNode.addChild(engineExhaust!)
         engineExhaust?.isHidden = true
+        
+        
+        scoreTextNode.text = "SCORE : \(score)"
+        scoreTextNode.fontSize = 20
+        scoreTextNode.fontColor = SKColor.white
+        scoreTextNode.position = CGPoint(x: size.width - 10, y: size.height - 20)
+        scoreTextNode.horizontalAlignmentMode = .right
+        addChild(scoreTextNode)
+        
+        
+        impulseTextNode.text = "IMPULSE : \(impulseCount)"
+        impulseTextNode.fontSize = 20
+        impulseTextNode.fontColor = SKColor.white
+        impulseTextNode.position = CGPoint(x: 10.0, y: size.height - 20)
+        impulseTextNode.horizontalAlignmentMode = .left
+        addChild(impulseTextNode)
+    
+        
+        startGameTextNode.text = "TAP ANYWHERE TO START!"
+        startGameTextNode.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.center
+        startGameTextNode.verticalAlignmentMode = SKLabelVerticalAlignmentMode.center
+        startGameTextNode.fontSize = 20
+        startGameTextNode.fontColor = SKColor.white
+        startGameTextNode.position =
+            CGPoint(x: scene!.size.width / 2, y: scene!.size.height / 2)
+        addChild(startGameTextNode)
         
     }
     
@@ -157,6 +196,7 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
     
     
     override func didSimulatePhysics() {
+        
         if let accelerometerData = coreMotionManager.accelerometerData {
             playerNode.physicsBody!.velocity = CGVector(dx: CGFloat(accelerometerData.acceleration.x * 380), dy: playerNode.physicsBody!.velocity.dy)
         }
@@ -166,13 +206,18 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
         }else if playerNode.position.x > self.size.width {
             playerNode.position = CGPoint(x: playerNode.size.width / 2, y: playerNode.position.y);
         }
+        
     }
     
     
    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
         if !playerNode.physicsBody!.isDynamic { //turning the player’s dynamic volume back on, if it was off, so the player will start reacting to gravity again
+            
+            startGameTextNode.removeFromParent()
+            
             playerNode.physicsBody?.isDynamic = true //The purpose of this code is to put the game in an initial start state with the player stationary until i tap the screen to start. When the screen is tapped the first time, the game begins.
             
             coreMotionManager.accelerometerUpdateInterval = 0.3 //the interval, in seconds, that the accelerometer will use to update the app with the current acceleration. This value is set to 3/10ths of a second, which provides a pretty smooth update rate.
@@ -180,8 +225,12 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
         }
         
         if impulseCount > 0 { //the impulseCount property to give the user a limited number of impulses that can be used
+            
+            run(tapPopAction)
+            
             playerNode.physicsBody!.applyImpulse(CGVector(dx: 0.0, dy: 40.0)) //This line applies an impulse to the playerNode’s physics body every time you tap the screen.
             impulseCount -= 1
+            impulseTextNode.text = "IMPULSE : \(impulseCount)"
             
             engineExhaust?.isHidden = false
 
@@ -190,8 +239,8 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
     }
     
     override func update(_ currentTime: TimeInterval) {
-        if playerNode.position.y >= 180.0 {
-            
+        if playerNode.position.y >= 180.0 && playerNode.position.y < 6400.0 {
+        
             backgroundNode.position = CGPoint(x: backgroundNode.position.x, y: -((playerNode.position.y - 180.0)/8) )
             
             backgroundStarsNode.position = CGPoint(x: backgroundStarsNode.position.x, y: -((playerNode.position.y - 180.0)/6))
@@ -199,6 +248,10 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
             backgroundPlanetNode.position = CGPoint(x: backgroundPlanetNode.position.x, y: -(playerNode.position.y - 180.0))
             
             foregroundNode.position = CGPoint(x: foregroundNode.position.x, y: -(playerNode.position.y - 180.0) )
+        }
+        else if playerNode.position.y > 7000 {
+            
+            gameOverWithResult(true)
         }
     }
     
@@ -211,6 +264,19 @@ class GameScene: SKScene { //SKScene is the root node for all Sprite Kit Objects
     
     deinit {
         coreMotionManager.stopAccelerometerUpdates()
+    }
+    
+    func gameOverWithResult(_ gameResult: Bool) {
+        
+        playerNode.removeFromParent()
+        if gameResult {
+            
+            print("YOU WON!")
+        }
+        else{
+            
+            print("YOU LOSE!")
+        }
     }
     
 }
@@ -228,9 +294,23 @@ extension GameScene: SKPhysicsContactDelegate {
         
         if let nodeB = contact.bodyB.node { //optional blinding, if nodeB is nil it will not execute
             if nodeB.name == "POWER_UP_ORB" { //if there is a contact then the nodeB is true
+                run(orbPopAction)
+                
                 impulseCount += 1 //the contact is going to also increment the impuleCount variable, giving the player additional impulses
+                impulseTextNode.text = "IMPULSE : \(impulseCount)"
+                
+                score += 1
+                scoreTextNode.text = "SCORE : \(score)"
+                
                 nodeB.removeFromParent() //then nodeB will be disappear
             } else if nodeB.name == "BLACK_HOLE" {
+                
+//                if playerNode.position.y + playerNode.size.height < 0.0 {
+//                    run(<#T##action: SKAction##SKAction#>)
+//                }
+                
+                run(diedPopAction)
+                
                 playerNode.physicsBody?.contactTestBitMask = 0
                 impulseCount = 0
                 
